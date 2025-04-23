@@ -8,6 +8,7 @@ import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.GeneroLivro;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Livro;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.LivroRepository;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.specs.LivroSpecs;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.validator.LivroValidator;
 import jakarta.validation.Valid;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,15 @@ import static io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.specs.Liv
 @Service
 public class LivroService {
     private final LivroRepository repository;
+    private final LivroValidator validator;
 
-    public LivroService(LivroRepository repository) {
+    public LivroService(LivroRepository repository, LivroValidator validator) {
         this.repository = repository;
+        this.validator = validator;
     }
 
     public Livro salvar(Livro livro) {
+        validator.validar(livro);
         return repository.save(livro);
     }
 
@@ -74,5 +78,14 @@ public class LivroService {
         }
 
         return repository.findAll(specs);
+    }
+
+    public void atualizar(Livro livro) {
+        if (livro.getId() == null) {
+            throw new IllegalArgumentException("Livro não encontrado, não iremos atualizar");
+        }
+
+        validator.validar(livro);
+        repository.save(livro);
     }
 }
