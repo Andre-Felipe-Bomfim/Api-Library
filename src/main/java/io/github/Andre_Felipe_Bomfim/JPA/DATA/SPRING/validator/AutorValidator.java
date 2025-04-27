@@ -31,7 +31,7 @@ public class AutorValidator {
         }
 
         //return !autor.getUuid().equals(autorEncontrado.get().getUuid()) && autorEncontrado.isPresent();
-        return autorEncontrado
+        return !autorEncontrado
                 .map(foundAutor -> !autor.getUuid().equals(foundAutor.getUuid())).orElse(true);
     }
 }
