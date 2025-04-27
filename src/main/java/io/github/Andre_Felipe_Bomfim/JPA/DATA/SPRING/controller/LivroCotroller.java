@@ -8,6 +8,7 @@ import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Livro;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.LivroService;
 import jakarta.validation.Valid;
 import org.aspectj.weaver.ast.Var;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class LivroCotroller implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResultadoLivroDTO>> pesquisar(
+    public ResponseEntity<Page<ResultadoLivroDTO>> pesquisar(
             @RequestParam(value = "isbn", required = false)
             String isbn,
             @RequestParam(value = "titulo", required = false)
@@ -69,10 +70,36 @@ public class LivroCotroller implements GenericController {
             @RequestParam(value = "genero", required = false)
             GeneroLivro genero,
             @RequestParam(value = "ano-publicacao", required = false)
-            Integer anoPublicacao)
-    {
-        var resultado = service.pesquisa(isbn, titulo, nomeAutor, genero, anoPublicacao);
-        var lista = resultado.stream().map(mapper::toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(lista);
+            Integer anoPublicacao,
+            @RequestParam(value = "pagina", defaultValue = "0")
+            Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10")
+            Integer tamanhoPagina
+    ){
+        Page<Livro> paginaResultado = service.pesquisa(
+                isbn, titulo, nomeAutor, genero, anoPublicacao, pagina, tamanhoPagina);
+
+        Page<ResultadoLivroDTO> resultado = paginaResultado.map(mapper::toDto);
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Object> atulizar(@PathVariable("id") String id, @RequestBody @Valid CadastroLivroDTO dto){
+        return service.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    Livro entidadeAuxiliar = mapper.toEntity(dto);
+
+                    livro.setDataPublicacao(entidadeAuxiliar.getDataPublicacao());
+                    livro.setIsbn(entidadeAuxiliar.getIsbn());
+                    livro.setPreco(entidadeAuxiliar.getPreco());
+                    livro.setGenero(entidadeAuxiliar.getGenero());
+                    livro.setTitulo(entidadeAuxiliar.getTitulo());
+                    livro.setAutor(entidadeAuxiliar.getAutor());
+
+                    service.atualizar(livro);
+
+                    return ResponseEntity.noContent().build();
+                }).orElseGet( () -> ResponseEntity.notFound().build() );
     }
 }
