@@ -2,6 +2,7 @@ package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.controller.common;
 
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.dto.ErroResposta;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.dto.ErrosCampo;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.AnoAcimaDoisMilEVinteException;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.OperacaoNaoPermitidaException;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErroResposta handleRegistroCuplicadoException (RegistroDuplicadoException e){
         return ErroResposta.conflito(e.getMessage());//conflito = registro duplicado
+    }
+
+    @ExceptionHandler(AnoAcimaDoisMilEVinteException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResposta handleAnoAcimaDoisMilEVinteException(AnoAcimaDoisMilEVinteException e){
+        return new ErroResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação!",
+                List.of(new ErrosCampo(e.getCampo(), e.getMessage())));
     }
 
     @ExceptionHandler(OperacaoNaoPermitidaException.class)
