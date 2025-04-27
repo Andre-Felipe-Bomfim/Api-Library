@@ -10,6 +10,9 @@ import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.LivroRepository;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.specs.LivroSpecs;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.validator.LivroValidator;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -44,7 +47,13 @@ public class LivroService {
         repository.delete(livro);
     }
 
-    public List<Livro> pesquisa(String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao){
+    public Page<Livro> pesquisa(String isbn,
+                                String titulo,
+                                String nomeAutor,
+                                GeneroLivro genero,
+                                Integer anoPublicacao,
+                                Integer pagina,
+                                Integer tamanhoPagina){
         //select * from livro where isbn = : isbn and nomeAutor = etc...
 
         //where isbn =isbn isso que queremos
@@ -77,7 +86,9 @@ public class LivroService {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
-        return repository.findAll(specs);
+        Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
+
+        return repository.findAll(specs, pageRequest);
     }
 
     public void atualizar(Livro livro) {
