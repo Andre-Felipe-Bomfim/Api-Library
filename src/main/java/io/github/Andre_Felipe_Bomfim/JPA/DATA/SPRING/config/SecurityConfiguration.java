@@ -16,8 +16,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable) //importante para segurança
-                .formLogin(Customizer.withDefaults()) //adiciona o formulario padrão
-                .httpBasic(Customizer.withDefaults())
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login").permitAll();
+                }) //adiciona o formulario padrão, não é obrigatório
+                //.httpBasic(Customizer.withDefaults()) // não é obrigatório
                 .authorizeHttpRequests(authorize -> {authorize.anyRequest().authenticated();})
                 .build();
     }
