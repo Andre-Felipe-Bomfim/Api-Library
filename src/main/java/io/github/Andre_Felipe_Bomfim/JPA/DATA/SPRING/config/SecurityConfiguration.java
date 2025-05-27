@@ -3,6 +3,7 @@ package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.config;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,10 +26,16 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable) //importante para segurança
                 .httpBasic(Customizer.withDefaults()) // não é obrigatório
                 .formLogin(configurer -> {
-                    configurer.loginPage("/login").permitAll();
+                    configurer.loginPage("/login");
                 }) //adiciona o formulario padrão, não é obrigatório
                 .authorizeHttpRequests(authorize -> {
-                    authorize.anyRequest().authenticated();})
+                    //roles
+                    authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasAuthority("CADASTRAR-AUTOR");
+                    //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasRole("ADMIN"); exemplo de method para ser usado somente por um role, o mais comun é usar authority para isso, uma role pode ter várias authoritys
+                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
+                    authorize.anyRequest().authenticated();})//deixar o anyRequest por último, pois todas aas demais abaixo dela vão ser ignoradas.
                 .build();
     }
 
