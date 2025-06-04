@@ -30,7 +30,8 @@ public class SecurityConfiguration {
                 }) //adiciona o formulario padrão, não é obrigatório
                 .authorizeHttpRequests(authorize -> {
                     //roles
-                    authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers("/login/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST,"/usuarios/**").permitAll();
                     authorize.requestMatchers("/autores/**").hasRole("ADMIN");
                     //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasAuthority("CADASTRAR-AUTOR");
                     //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasRole("ADMIN"); exemplo de method para ser usado somente por um role, o mais comun é usar authority para isso, uma role pode ter várias authoritys
