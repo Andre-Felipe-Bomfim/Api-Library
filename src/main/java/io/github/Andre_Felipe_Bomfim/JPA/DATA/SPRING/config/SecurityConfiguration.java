@@ -1,6 +1,5 @@
 package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.config;
 
-import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.security.CustomUserDetailService;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.UsuarioService;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
