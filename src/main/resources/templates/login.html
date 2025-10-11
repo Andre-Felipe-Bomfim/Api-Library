@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - Livraria</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&display=swap');
+
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
+        body {
+          font-family: 'Merriweather', serif;
+          background: #f5f1e7 url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+          background-size: cover;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
+        .login-container {
+          background-color: rgba(255, 255, 255, 0.95);
+          padding: 2.5rem 2rem;
+          border-radius: 10px;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+          width: 100%;
+          max-width: 400px;
+          text-align: center;
+        }
+
+        .login-container h1 {
+          margin-bottom: 1rem;
+          font-size: 1.8rem;
+          color: #4a3f35;
+        }
+
+        .login-container p {
+          font-size: 0.95rem;
+          color: #7a6c5d;
+          margin-bottom: 1.5rem;
+        }
+
+        .login-container input[type="email"],
+        .login-container input[type="password"] {
+          width: 100%;
+          padding: 0.75rem;
+          margin-bottom: 1.2rem;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 1rem;
+        }
+
+        .login-container button {
+          background-color: #a67c52;
+          color: white;
+          padding: 0.75rem 2rem;
+          border: none;
+          border-radius: 5px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .login-container button:hover {
+          background-color: #8b6842;
+        }
+
+        .login-container .register-link {
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: #6d5d4b;
+        }
+
+        .login-container .register-link a {
+          color: #8b6842;
+          text-decoration: none;
+        }
+
+        .login-container .register-link a:hover {
+          text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>Livraria</h1>
+    <p>Faça login para continuar sua jornada literária</p>
+    <form method="post" th:action="@{/login}">
+        <div>
+            <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+        </div>
+        <input type="password" id="password" name="password" placeholder="Sua senha" required>
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+</body>
+</html>
