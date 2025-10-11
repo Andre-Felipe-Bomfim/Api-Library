@@ -1,5 +1,7 @@
 package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.config;
 
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.security.CustomUserDetailService;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.UsuarioService;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,10 +49,9 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder){
+    public UserDetailsService userDetailsService(UsuarioService usuarioService){
         //em memória
-
-        UserDetails user1 = User.builder()
+        /*UserDetails user1 = User.builder()
                 .username("usuario")
                 .password(encoder.encode("123"))
                 .roles("USER")
@@ -62,6 +63,8 @@ public class SecurityConfiguration {
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(user1, user2);
+        return new InMemoryUserDetailsManager(user1, user2);*/
+
+        return new CustomUserDetailService(usuarioService);
     }
 }
