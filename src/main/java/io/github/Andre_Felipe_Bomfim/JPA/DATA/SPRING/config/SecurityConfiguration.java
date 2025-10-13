@@ -1,11 +1,13 @@
 package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.config;
 
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.security.CustomUserDetailService;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.UsuarioService;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)//habilita a utilização de especificações nos controllers para oq cada usuario pode entrar dentro de uma aplicação e fazer ex: um fncionario tem um acesso restrito já o gerente tem muito mais coisas liberadas
 public class SecurityConfiguration {
 
     @Bean
@@ -33,10 +36,10 @@ public class SecurityConfiguration {
                     //roles
                     authorize.requestMatchers("/login/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST,"/usuarios/**").permitAll();
-                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    //authorize.requestMatchers("/autores/**").hasRole("ADMIN");
                     //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasAuthority("CADASTRAR-AUTOR");
                     //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasRole("ADMIN"); exemplo de method para ser usado somente por um role, o mais comun é usar authority para isso, uma role pode ter várias authoritys
-                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
+                    //authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
                     authorize.anyRequest().authenticated();})//deixar o anyRequest por último, pois todas aas demais abaixo dela vão ser ignoradas.
                 .build();
     }

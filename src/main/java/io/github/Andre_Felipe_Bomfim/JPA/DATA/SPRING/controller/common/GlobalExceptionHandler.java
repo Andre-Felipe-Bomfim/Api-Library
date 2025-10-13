@@ -6,6 +6,7 @@ import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.AnoAcimaDoisMilE
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.OperacaoNaoPermitidaException;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
     public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitidaException e){
         return ErroResposta.respostapadrao(e.getMessage());
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErroResposta handleAccesDeniedException(AccessDeniedException e){
+        return new ErroResposta(HttpStatus.FORBIDDEN.value(), "Acesso Negado", List.of());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroResposta handleErrosNaoTratados(RuntimeException e){

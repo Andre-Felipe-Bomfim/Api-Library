@@ -7,28 +7,26 @@ import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.GeneroLivro;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Livro;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.LivroService;
 import jakarta.validation.Valid;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("livros")
-public class LivroCotroller implements GenericController {
+public class LivroController implements GenericController {
     private final LivroService service;
     private final LivroMapper mapper;
 
-    public LivroCotroller(LivroService service, LivroMapper mapper) {
+    public LivroController(LivroService service, LivroMapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")//Autorizado para
     public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
         //mapear dto para entidade
         Livro livro = mapper.toEntity(dto);
@@ -41,6 +39,7 @@ public class LivroCotroller implements GenericController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")//Autorizado para
     public ResponseEntity<ResultadoLivroDTO> obterDetalhes(@PathVariable("id") String id){
         return service.obterPorId(UUID.fromString(id))
                 .map(livro -> {
@@ -50,6 +49,7 @@ public class LivroCotroller implements GenericController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")//Autorizado para
     public ResponseEntity<Object> deletar(@PathVariable
                                         String id){
         return service.obterPorId(UUID.fromString(id))
@@ -60,6 +60,7 @@ public class LivroCotroller implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")//Autorizado para
     public ResponseEntity<Page<ResultadoLivroDTO>> pesquisar(
             @RequestParam(value = "isbn", required = false)
             String isbn,
@@ -85,6 +86,7 @@ public class LivroCotroller implements GenericController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")//Autorizado para
     public ResponseEntity<Object> atulizar(@PathVariable("id") String id, @RequestBody @Valid CadastroLivroDTO dto){
         return service.obterPorId(UUID.fromString(id))
                 .map(livro -> {
