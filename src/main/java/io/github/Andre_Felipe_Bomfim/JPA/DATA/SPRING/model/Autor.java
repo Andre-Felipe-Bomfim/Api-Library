@@ -41,8 +41,9 @@ public class Autor {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
-    @Column(name = "id_usuario")
-    private UUID idUsuario;
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 
     public UUID getUuid() {
         return uuid;
@@ -100,12 +101,12 @@ public class Autor {
         this.dataAtualizacao = dataAtualizacao;
     }
 
-    public UUID getIdUsuario() {
-        return idUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setIdUsuario(UUID idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override
@@ -115,9 +116,10 @@ public class Autor {
                 ", nome='" + nome + '\'' +
                 ", dataNascimento=" + dataNascimento +
                 ", nacionalidade='" + nacionalidade + '\'' +
+                ", livros=" + livros +
                 ", dataCadastro=" + dataCadastro +
                 ", dataAtualizacao=" + dataAtualizacao +
-                ", idUsuario=" + idUsuario +
+                ", usuario=" + usuario +
                 '}';
     }
 }

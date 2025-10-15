@@ -2,8 +2,10 @@ package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service;
 
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.OperacaoNaoPermitidaException;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Autor;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Usuario;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.AutorRepository;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.LivroRepository;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.security.SecurityService;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.validator.AutorValidator;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -19,15 +21,19 @@ public class AutorService {
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
-    public AutorService(AutorRepository autorRepository, AutorValidator autorValidator, LivroRepository livroRepository) {
+    public AutorService(AutorRepository autorRepository, AutorValidator autorValidator, LivroRepository livroRepository, SecurityService securityService) {
         this.autorRepository = autorRepository;
         this.autorValidator = autorValidator;
         this.livroRepository = livroRepository;
+        this.securityService = securityService;
     }
 
     public Autor salvar(Autor autor){
         autorValidator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return autorRepository.save(autor);
     }
 

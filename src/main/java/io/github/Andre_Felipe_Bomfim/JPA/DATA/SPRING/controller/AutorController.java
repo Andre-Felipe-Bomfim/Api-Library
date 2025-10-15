@@ -3,10 +3,15 @@ package io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.controller;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.controller.mappers.AutorMapper;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.dto.AutorDTO;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Autor;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Usuario;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.security.SecurityService;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.AutorService;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -30,7 +35,8 @@ public class AutorController implements GenericController {
     @PostMapping//ou @RequestMapping() o request body indica que vai ser recebido no body
     //@Valid barra de salvar o autor sem nome
     @PreAuthorize("hasRole('GERENTE')")
-    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO autorDTO) {
+    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO autorDTO, Authentication authentication) {
+
         Autor autor = autorMapper.toEntity(autorDTO);
         autorService.salvar(autor);
         URI location = gerarHeaderLocation(autor.getUuid());

@@ -6,8 +6,10 @@ import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.dto.ErroResposta;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.exceptions.RegistroDuplicadoException;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.GeneroLivro;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Livro;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.model.Usuario;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.LivroRepository;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.specs.LivroSpecs;
+import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.security.SecurityService;
 import io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.validator.LivroValidator;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -28,14 +30,18 @@ import static io.github.Andre_Felipe_Bomfim.JPA.DATA.SPRING.repository.specs.Liv
 public class LivroService {
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
-    public LivroService(LivroRepository repository, LivroValidator validator) {
+    public LivroService(LivroRepository repository, LivroValidator validator, SecurityService securityService) {
         this.repository = repository;
         this.validator = validator;
+        this.securityService = securityService;
     }
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return repository.save(livro);
     }
 
