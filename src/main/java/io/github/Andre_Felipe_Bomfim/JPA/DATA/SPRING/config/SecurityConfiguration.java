@@ -29,9 +29,10 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable) //importante para segurança
                 .httpBasic(Customizer.withDefaults()) // não é obrigatório
-                .formLogin(configurer -> {
+                /*.formLogin(configurer -> {
                     configurer.loginPage("/login");
-                }) //adiciona o formulario padrão, não é obrigatório
+                }) //adiciona o formulario padrão, não é obrigatório*/
+                .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     //roles
                     authorize.requestMatchers("/login/**").permitAll();
@@ -40,7 +41,9 @@ public class SecurityConfiguration {
                     //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasAuthority("CADASTRAR-AUTOR");
                     //authorize.requestMatchers(HttpMethod.DELETE,"/autores").hasRole("ADMIN"); exemplo de method para ser usado somente por um role, o mais comun é usar authority para isso, uma role pode ter várias authoritys
                     //authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
-                    authorize.anyRequest().authenticated();})//deixar o anyRequest por último, pois todas aas demais abaixo dela vão ser ignoradas.
+                    authorize.anyRequest().authenticated();
+                })//deixar o anyRequest por último, pois as demais abaixo dela vão ser ignoradas.
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 
