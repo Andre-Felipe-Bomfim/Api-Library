@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);                                                                                                          //uma das mais seguras, quando você codifica a senha não é possível voltar atrás, ou seja, não tem descriptrografar
     }
 
-    @Bean
+    //@Bean desabilitado para rodar o CustomAuthentificathionProvider
     public UserDetailsService userDetailsService(UsuarioService usuarioService){
         //em memória
         /*UserDetails user1 = User.builder()
